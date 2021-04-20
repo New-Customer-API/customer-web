@@ -1,10 +1,18 @@
-FROM node:alpine AS my-app-build
-WORKDIR /app
+
+FROM node:12.16.1-alpine As builder
+
+WORKDIR /customer-web
+
+COPY package.json ./
+
+RUN npm install
+
 COPY . .
-RUN npm ci && npm run build
 
-# stage 2
+RUN npm run build --prod
 
-FROM nginx:alpine
-COPY --from=customer-web /app/dist/customer-web /usr/share/nginx/html
+FROM nginx:1.15.8-alpine
+
+COPY --from=builder /customer-web/dist/customer-web /usr/share/nginx/html
+
 EXPOSE 80
