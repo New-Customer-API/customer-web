@@ -1,7 +1,10 @@
-FROM node:12.18.4-alpine3.12
-ADD . /customer-web
-WORKDIR /customer-web
-RUN npm install -g @angular/cli 
-RUN npm install
-EXPOSE 4200
-CMD ["ng", "serve", "--host 0.0.0.0"]
+FROM node:alpine AS my-app-build
+WORKDIR /app
+COPY . .
+RUN npm ci && npm run build
+
+# stage 2
+
+FROM nginx:alpine
+COPY --from=customer-web /app/dist/customer-web /usr/share/nginx/html
+EXPOSE 80

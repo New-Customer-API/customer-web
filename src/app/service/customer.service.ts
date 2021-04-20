@@ -12,7 +12,7 @@ export class CustomerService {
 
     constructor(private httpClient: HttpClient) {}
 
-    private urlAPI = "http://3.80.185.39:8080";
+    private urlAPI = "http://3.85.30.223:8080";
 
     getAllCustomer(fullName?: string): Observable<Array<CustomerModel> | undefined> {
 

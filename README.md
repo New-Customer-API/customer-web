@@ -1,27 +1,38 @@
-# CustomerWeb
+# Customer Web
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.9.
+* To run:
 
-## Development server
+```
+$ docker-compose up
+```
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+* Open in browse http://localhost:9000
 
-## Code scaffolding
+* Technologies Used:
+    1. Angular 9
+    2. Docker 
+    3. Docker compose
+    4. AWS ECS
+    5. CircleCI
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
+Application:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+<p align="center">
+  <img src="./img/front-1.png">
+</p>
 
-## Running unit tests
+<p align="center">
+  <img src="./img/front-2.png">
+</p>
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+<p align="center">
+  <img src="./img/front-3.png">
+</p>
 
-## Running end-to-end tests
+AWS Service:
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+<p align="center">
+  <img src="./img/service-web.png">
+</p>
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.

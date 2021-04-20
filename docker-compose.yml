@@ -1,9 +1,7 @@
-version: "3"
+version: '3.3'
 services:
-  customer-web:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  customer-web-docker:
+    container_name: customer-web
+    build: .
     ports:
-      - "4200:4200"
-    stdin_open: true
+      - '9000:80'
