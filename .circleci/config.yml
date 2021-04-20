@@ -1,0 +1,75 @@
+version: 2.1
+
+orbs:
+  aws-ecr: circleci/aws-ecr@6.4.0
+  aws-ecs: circleci/aws-ecs@0.0.11
+
+jobs:
+
+  build:
+    docker:
+      - image: cimg/node:15.14.0
+    steps:
+      - checkout
+      - run: npm install
+
+  deploy:
+    docker:
+      - image: cimg/node:15.14.0
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Setup common environment variables
+          command: |
+            echo 'export ECR_REPOSITORY_NAME=customer-web' >> $BASH_ENV
+            echo 'export FULL_IMAGE_NAME="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPOSITORY_NAME}:latest"' >> $BASH_ENV
+      - run:
+          name: Install dependencies for AWS
+          command: |
+            sudo apt-get update
+            sudo apt-get -y -qq install awscli
+            sudo apt-get install python3-pip
+            sudo pip3 install --upgrade awscli
+      - run:
+          name: Build image
+          command: |
+            docker build -t $FULL_IMAGE_NAME .
+      - run:
+          name: Push image
+          command: |
+            eval $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
+            docker push $FULL_IMAGE_NAME
+  update:
+    docker:
+      - image: cimg/node:15.14.0
+    steps:
+      - run:
+          name: Install dependencies for AWS
+          command: |
+            sudo apt-get update
+            sudo apt-get -y -qq install awscli
+            sudo apt-get install python3-pip
+            sudo pip3 install --upgrade awscli
+      - run:
+          name: Force Update Existing Service
+          command: |
+            aws ecs update-service --cluster customer-web-cluster --service customer-web-service --region ${AWS_DEFAULT_REGION} --force-new-deployment
+workflows:
+  build-then-deploy:
+    jobs:
+      - build
+      - deploy:
+          filters:
+            branches:
+              only: master
+          context: AWS
+          requires:
+            - build
+      - update:
+          filters:
+            branches:
+              only: master
+          context: AWS
+          requires:
+            - deploy
